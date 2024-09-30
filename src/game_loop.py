@@ -72,31 +72,37 @@ class GameLoop:
 
             renderer.render_game()
             Renderer.render_game_menu(hints)
+
+            guess = InputHandler.get_user_input(
+                'Введите номер пункта меню или введите вашу букву: ')
             try:
-                guess = InputHandler.get_user_input(
-                    'Введите номер пункта меню или введите вашу букву: ')
-                try:
-                    InputHandler.validate_user_guess(guess)
-                except InvalidUserGuessError as e:
-                    self.error_handler.handle_error(e)
-                    continue
-                if guess in ["1", "2"]:
-                    self.handle_hint(guess, hints, game)
-                elif guess == "3":
-                    break
-                elif guess == "4":
-                    self.exit_program()
-                else:
-                    try:
-                        game.guess_letter(guess.lower())
-                    except LetterAlreadyGuessedError as e:
-                        self.error_handler.handle_error(e)
+                InputHandler.validate_user_guess(guess)
             except InvalidUserGuessError as e:
                 self.error_handler.handle_error(e)
                 continue
 
+            action_result = self.process_user_input(guess, hints, game)
+            if action_result == "break":
+                break
+
         renderer.render_game_result(game)
         self.post_game()
+
+    def process_user_input(self, guess, hints, game):
+        actions = {
+            "1": lambda: self.handle_hint(guess, hints, game),
+            "2": lambda: self.handle_hint(guess, hints, game),
+            "3": lambda: "break",
+            "4": lambda: self.exit_program()
+        }
+
+        if guess in actions:
+            return actions[guess]()
+        else:
+            try:
+                game.guess_letter(guess.lower())
+            except LetterAlreadyGuessedError as e:
+                self.error_handler.handle_error(e)
 
     def handle_hint(self, guess: str, hints: List[str],
                     game: HangmanGame) -> None:
@@ -143,25 +149,33 @@ class GameLoop:
         self.difficulty = "Случайно"
         self.category = "Случайная"
 
+    def process_post_game_choice(self, choice):
+        actions = {
+            "1": self.reset_settings_and_return_to_main_menu,
+            "2": self.exit_program
+        }
+
+        if choice in actions:
+            actions[choice]()
+
+    def reset_settings_and_return_to_main_menu(self):
+        self.reset_settings()
+        self.return_to_main_menu()
+
     def post_game(self) -> None:
         """
         Метод для действий после игры.
         """
         while True:
             Renderer.render_post_game_menu()
+            post_game_choice = InputHandler.get_user_input(
+                "Введите номер пункта меню: ")
             try:
-                post_game_choice = InputHandler.get_user_input(
-                    "Введите номер пункта меню: ")
                 InputHandler.validate_menu_choice(post_game_choice, ["1", "2"])
-                if post_game_choice == "1":
-                    self.reset_settings()
-                    self.return_to_main_menu()
-                elif post_game_choice == "2":
-                    self.exit_program()
+                self.process_post_game_choice(post_game_choice)
             except InvalidMenuChoiceError as e:
                 self.error_handler.handle_error(e)
                 self.clear_screen_and_display_errors()
-                continue
 
     def choose_category(self) -> None:
         """
