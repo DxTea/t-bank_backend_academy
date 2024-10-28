@@ -138,7 +138,9 @@ class Menu:
         """
         Отображает основное меню и возвращает выбор пользователя.
         """
-        return self.renderer.display_menu(self.options)
+        while True:
+            choice = self.renderer.display_menu(self.options)
+            self.handle_choice(choice)
 
     def handle_choice(self, choice):
         """
@@ -180,6 +182,7 @@ class Menu:
             elif choice == '5':
                 self.display_complicate_generation_menu()
             elif choice == '6':
+                self.display_menu()
                 break
             elif choice == '7':
                 self.exit_game()
@@ -249,6 +252,7 @@ class Menu:
                 self.renderer.render_no_solution()
 
             self.renderer.render_options()
+            self.renderer.reset_positions()
             choice = self.input_handler.get_choice(
                 "Enter the number of your choice: ")
             if choice == '1':

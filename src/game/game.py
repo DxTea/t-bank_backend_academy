@@ -2,6 +2,7 @@ from src.game.player import Player
 from src.view.renderer import ConsoleRenderer
 
 
+
 class Game:
     def __init__(self, maze):
         """
@@ -29,7 +30,8 @@ class Game:
             move = input("Enter move (w, s, a, d): ")
             result = self.player.move(move, self.maze, self.maze_obj)
             if result == 'settings':
-                self.display_game_settings_menu()
+                if self.display_game_settings_menu() == 'main_menu':
+                    return
             elif self.player.position == self.exit:
                 self.player.increase_score()
                 self.renderer.render_game(self)
@@ -44,4 +46,4 @@ class Game:
         """
         from src.handlers.menu_handler import Menu
         menu = Menu()
-        menu.display_game_settings_menu()
+        return menu.display_game_settings_menu()
