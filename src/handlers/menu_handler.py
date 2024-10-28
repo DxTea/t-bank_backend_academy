@@ -76,13 +76,16 @@ class Menu:
             else:
                 self.renderer.display_error_message()
 
-    def main_menu(self) -> None:
+    def main_menu(self) -> int:
         """
         Отображает основное меню и возвращает выбор пользователя.
         """
         while True:
             choice: int = self.renderer.display_menu(self.options)
-            self.handle_choice(choice)
+            if choice in [1, 2, 3]:
+                return choice
+            else:
+                self.renderer.display_error_message()
 
     def handle_choice(self, choice: int) -> None:
         """

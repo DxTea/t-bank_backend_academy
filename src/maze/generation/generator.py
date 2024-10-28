@@ -27,8 +27,6 @@ class Generator(IGenerator):
         :return: Сгенерированный лабиринт.
         :raises ValueError: Если указанный алгоритм неизвестен.
         """
-        print("Generator")
-        print(self.maze)
         if algorithm == "Краскал":
             generator = Kruskal(self.maze)
         elif algorithm == "Прим":
