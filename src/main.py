@@ -1,13 +1,12 @@
-import logging
-import platform
-
-logging.basicConfig()
-logging.getLogger().setLevel(logging.INFO)
-logger = logging.getLogger(__name__)
+from src.handlers.menu_handler import Menu
 
 
 def main() -> None:
-    logger.info(platform.python_version())
+    menu = Menu()
+    menu.display_welcome_screen()
+    while True:
+        choice = menu.display_menu()
+        menu.handle_choice(choice)
 
 
 if __name__ == "__main__":
