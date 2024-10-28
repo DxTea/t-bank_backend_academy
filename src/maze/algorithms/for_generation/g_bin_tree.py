@@ -1,11 +1,12 @@
 import random
 
+from typing import List, Tuple
 from src.maze.algorithms.for_generation.base_maze_generator import \
     BaseMazeGenerator
 
 
 class BinaryTreeMaze(BaseMazeGenerator):
-    def __init__(self, maze):
+    def __init__(self, maze) -> None:
         """
         Инициализирует объект алгоритма генерации лабиринта с
         использованием бинарного дерева.
@@ -17,7 +18,7 @@ class BinaryTreeMaze(BaseMazeGenerator):
         self._generate_maze()
         self._set_exit()
 
-    def _initialize_maze(self):
+    def _initialize_maze(self) -> None:
         """
         Инициализирует лабиринт, заполняя его стенами.
         """
@@ -25,14 +26,14 @@ class BinaryTreeMaze(BaseMazeGenerator):
             for x in range(self.width):
                 self.maze[y][x] = '#'
 
-    def _generate_maze(self):
+    def _generate_maze(self) -> None:
         """
         Генерирует лабиринт, используя алгоритм бинарного дерева.
         """
         for y in range(0, self.height, 2):
             for x in range(0, self.width, 2):
                 self.maze[y][x] = ' '
-                neighbors = []
+                neighbors: List[Tuple[int, int]] = []
                 if x > 0:
                     neighbors.append((x - 1, y))
                 if y > 0:

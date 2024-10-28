@@ -5,37 +5,39 @@ from src.maze.algorithms.for_generation.g_recursive_backtracking import \
     RecursiveBacktracking
 from src.maze.algorithms.for_generation.g_bin_tree import BinaryTreeMaze
 from src.maze.maze import Maze
+from typing import List
 
 
 class Generator(IGenerator):
-    def __init__(self, width, height):
+    def __init__(self, width: int, height: int) -> None:
         """
         Инициализирует объект генератора лабиринта с заданными размерами.
 
         :param width: Ширина лабиринта
         :param height: Высота лабиринта
-        :return: Объект Maze с заданными параметрами.
         """
         self.maze = Maze(width, height)
 
-    def generate_maze(self, algorithm):
+    def generate_maze(self, algorithm: str) -> List[List[str]]:
         """
         Генерирует лабиринт, используя указанный алгоритм.
 
-        :param algorithm: Алгоритм, который будет использоваться для генерации лабиринта.
+        :param algorithm: Алгоритм, который будет использоваться для
+        генерации лабиринта.
         :return: Сгенерированный лабиринт.
         :raises ValueError: Если указанный алгоритм неизвестен.
         """
-
-        if algorithm == "Kruskal":
+        print("Generator")
+        print(self.maze)
+        if algorithm == "Краскал":
             generator = Kruskal(self.maze)
-        elif algorithm == "Prim":
+        elif algorithm == "Прим":
             generator = Prim(self.maze)
-        elif algorithm == "Recursive Backtracking":
+        elif algorithm == "Рекурсивное обратное отслеживание":
             generator = RecursiveBacktracking(self.maze)
-        elif algorithm == "Binary Tree":
+        elif algorithm == "Двоичное дерево":
             generator = BinaryTreeMaze(self.maze)
         else:
-            raise ValueError(f"Unknown algorithm: {algorithm}")
+            raise ValueError(f"Неизвестный алгоритм: {algorithm}")
 
         return generator.get_maze()

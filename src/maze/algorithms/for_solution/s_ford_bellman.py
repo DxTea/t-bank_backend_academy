@@ -1,16 +1,20 @@
 from src.maze.algorithms.for_solution.base_solver import BaseSolver
+from typing import Dict, Tuple, Optional
+
+from src.maze.maze import Maze
 
 
 class FordBellman(BaseSolver):
-    def __init__(self, maze):
+    def __init__(self, maze: Maze) -> None:
         """
         Инициализирует объект алгоритма Форда-Беллмана для решения лабиринта.
 
         :param maze: Объект лабиринта, который нужно решить.
         """
         super().__init__(maze)
-        self.distances = {}
-        self.predecessors = {}
+        self.distances: Dict[Tuple[int, int], float] = {}
+        self.predecessors: Dict[
+            Tuple[int, int], Optional[Tuple[int, int]]] = {}
 
         # Инициализация расстояний для всех вершин
         for y in range(self.height):
@@ -20,7 +24,7 @@ class FordBellman(BaseSolver):
                     self.predecessors[(x, y)] = None
         self.distances[self.start] = 0
 
-    def solve(self):
+    def solve(self) -> bool:
         """
         Решает лабиринт, используя алгоритм Форда-Беллмана.
 
@@ -32,7 +36,8 @@ class FordBellman(BaseSolver):
                     if self.maze[y][x] in [' ', '🪙', '☠️']:
                         for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
                             nx, ny = x + dx, y + dy
-                            if (0 <= nx < self.width and 0 <= ny <
+                            if (
+                                    0 <= nx < self.width and 0 <= ny <
                                     self.height and
                                     self.maze[ny][nx] in [' ', '🪙', '☠️']):
                                 self._relax((x, y), (nx, ny))
@@ -47,7 +52,7 @@ class FordBellman(BaseSolver):
             return True
         return False
 
-    def _detect_negative_cycle(self):
+    def _detect_negative_cycle(self) -> bool:
         """
         Проверяет наличие циклов отрицательного веса.
 
@@ -60,24 +65,25 @@ class FordBellman(BaseSolver):
                         nx, ny = x + dx, y + dy
                         if 0 <= nx < self.width and 0 <= ny < self.height and \
                                 self.maze[ny][nx] in [' ', '🪙', '☠️']:
-                            if self.distances[(x, y)] + self.get_cost(nx, ny) < \
-                                    self.distances[(nx, ny)]:
+                            if (self.distances[(x, y)] + self.get_cost(nx,
+                                                                       ny) <
+                                    self.distances[(nx, ny)]):
                                 return True
         return False
 
-    def _relax(self, u, v):
+    def _relax(self, u: Tuple[int, int], v: Tuple[int, int]) -> None:
         """
         Выполняет релаксацию ребра между двумя вершинами.
 
         :param u: Координаты начальной вершины.
         :param v: Координаты конечной вершины.
         """
-        cost = self.get_cost(v[0], v[1])
+        cost: int = self.get_cost(v[0], v[1])
         if self.distances[u] + cost < self.distances[v]:
             self.distances[v] = self.distances[u] + cost
             self.predecessors[v] = u
 
-    def get_cost(self, x, y):
+    def get_cost(self, x: int, y: int) -> int:
         """
         Возвращает стоимость перехода в указанную клетку.
 
@@ -95,7 +101,7 @@ class FordBellman(BaseSolver):
                 return 1 + 10  # Увеличиваем стоимость на 10 для ловушки
         return 5  # Базовая стоимость для обычной клетки
 
-    def _mark_path(self, **kwargs):
+    def _mark_path(self, **kwargs) -> None:
         """
         Отмечает найденный путь в лабиринте.
         :param **kwargs:
@@ -103,8 +109,9 @@ class FordBellman(BaseSolver):
         x, y = self.finish
         while (x, y) != self.start:
             self.maze[y][x] = '1'
-            if ((x, y) not in self.predecessors or self.predecessors[(x, y)] is
-                    None):
+            if ((x, y) not in self.predecessors
+                    or self.predecessors[
+                        (x, y)] is None):
                 raise ValueError(f"Предшественник для {(x, y)} не найден")
             x, y = self.predecessors[(x, y)]
         self.maze[self.start[1]][self.start[0]] = '1'

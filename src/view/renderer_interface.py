@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import List, Any
 
 
 class IRenderer(ABC):
@@ -10,7 +11,7 @@ class IRenderer(ABC):
     """
 
     @abstractmethod
-    def render_maze(self, maze):
+    def render_maze(self, maze: Any) -> None:
         """
         Метод для рендеринга лабиринта.
 
@@ -19,7 +20,7 @@ class IRenderer(ABC):
         pass
 
     @abstractmethod
-    def display_game_settings_menu(self, menu_options):
+    def display_game_settings_menu(self, menu_options: List[str]) -> None:
         """
         Метод для рендеринга меню.
 
@@ -28,7 +29,7 @@ class IRenderer(ABC):
         pass
 
     @abstractmethod
-    def display_welcome_screen(self):
+    def display_welcome_screen(self) -> None:
         """
         Метод для рендеринга приветственного экрана.
         """

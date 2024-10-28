@@ -1,25 +1,26 @@
 import random
+from typing import List
 
 
 class BaseMazeGenerator:
-    def __init__(self, maze):
+    def __init__(self, maze) -> None:
         """
         Инициализирует объект базового генератора лабиринта.
 
         :param maze: Объект лабиринта, который нужно сгенерировать.
         """
         self.maze_obj = maze
-        self.width = maze.get_width()
-        self.height = maze.get_height()
-        self.maze = maze.get_maze()
+        self.width: int = maze.get_width()
+        self.height: int = maze.get_height()
+        self.maze: List[List[str]] = maze.get_maze()
 
-    def _set_exit(self):
+    def _set_exit(self) -> None:
         """
         Устанавливает выход из лабиринта в правом нижнем углу.
         """
         if self.width % 2 == 0:
-            x = random.choice([1, 2])
-            y = 1
+            x: int = random.choice([1, 2])
+            y: int = 1
             if x == 1:
                 y = 2
             self.maze[self.height - x][self.width - y] = ' '

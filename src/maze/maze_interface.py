@@ -1,9 +1,10 @@
 from abc import ABC, abstractmethod
+from typing import List
 
 
 class IMaze(ABC):
     @abstractmethod
-    def get_width(self):
+    def get_width(self) -> int:
         """
         Возвращает ширину лабиринта.
 
@@ -12,7 +13,7 @@ class IMaze(ABC):
         pass
 
     @abstractmethod
-    def get_height(self):
+    def get_height(self) -> int:
         """
         Возвращает высоту лабиринта.
 
@@ -21,7 +22,7 @@ class IMaze(ABC):
         pass
 
     @abstractmethod
-    def get_maze(self):
+    def get_maze(self) -> List[List[str]]:
         """
         Возвращает объект лабиринта.
 

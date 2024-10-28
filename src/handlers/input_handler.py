@@ -1,11 +1,12 @@
 import random
+from typing import Tuple
 
 import keyboard
 
 
 class InputHandler:
     @staticmethod
-    def get_choice(prompt):
+    def get_choice(prompt: str) -> str:
         """
         Получает выбор пользователя.
 
@@ -15,7 +16,7 @@ class InputHandler:
         return input(prompt)
 
     @staticmethod
-    def wait_for_space():
+    def wait_for_space() -> None:
         """
         Ждет нажатия клавиши пробела.
         """
@@ -24,14 +25,18 @@ class InputHandler:
                 break
 
     @staticmethod
-    def get_maze_size():
+    def get_maze_size() -> Tuple[int, int]:
         """
         Получает размер лабиринта от пользователя.
 
         :return: Ширина и высота лабиринта.
         """
-        width = int(input("Enter maze inner width (0 for random): "))
-        height = int(input("Enter maze inner height (0 for random): "))
+        width: int = int(input(
+            "Введите внутреннюю ширину лабиринта (0 для случайного "
+            "значения): "))
+        height: int = int(input(
+            "Введите внутреннюю высоту лабиринта (0 для случайного "
+            "значения): "))
         if width == 0:
             width = random.randint(10, 20)
         if height == 0:

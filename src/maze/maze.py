@@ -1,24 +1,25 @@
 from src.maze.maze_interface import IMaze
 from src.maze.surfaces import Surface, Trap, Coin
 import random
+from typing import List, Tuple, Dict, Optional
 
 
 class Maze(IMaze):
-    def __init__(self, width, height):
+    def __init__(self, width: int, height: int) -> None:
         """
         Инициализирует объект лабиринта с заданной шириной и высотой.
 
         :param width: Ширина лабиринта.
         :param height: Высота лабиринта.
         """
-        self.width = width
-        self.height = height
+        self.width: int = width
+        self.height: int = height
         self.maze = [['#'] * width for _ in range(height)]
-        self.start = (0, 0)
-        self.finish = (width - 1, height - 1)
-        self.surfaces = {}
+        self.start: Tuple[int, int] = (0, 0)
+        self.finish: Tuple[int, int] = (width - 1, height - 1)
+        self.surfaces: Dict[Tuple[int, int], Surface] = {}
 
-    def get_width(self):
+    def get_width(self) -> int:
         """
         Возвращает ширину лабиринта.
 
@@ -26,7 +27,7 @@ class Maze(IMaze):
         """
         return self.width
 
-    def get_height(self):
+    def get_height(self) -> int:
         """
         Возвращает высоту лабиринта.
 
@@ -34,7 +35,7 @@ class Maze(IMaze):
         """
         return self.height
 
-    def get_maze(self):
+    def get_maze(self) -> List[List[str]]:
         """
         Возвращает текущий лабиринт в виде двумерного списка.
 
@@ -42,7 +43,7 @@ class Maze(IMaze):
         """
         return self.maze
 
-    def set_surface(self, x, y, surface: Surface):
+    def set_surface(self, x: int, y: int, surface: Optional[Surface]) -> None:
         """
         Устанавливает поверхность в указанной ячейке лабиринта.
 
@@ -57,7 +58,7 @@ class Maze(IMaze):
             self.surfaces[(x, y)] = surface
             self.maze[y][x] = surface.symbol
 
-    def get_surface(self, x, y):
+    def get_surface(self, x: int, y: int) -> Optional[Surface]:
         """
         Возвращает поверхность, установленную в указанной ячейке лабиринта.
 
@@ -67,17 +68,19 @@ class Maze(IMaze):
         """
         return self.surfaces.get((x, y), None)
 
-    def place_random_surfaces(self, num_traps, num_coins):
+    def place_random_surfaces(self, num_traps: int, num_coins: int) -> None:
         """
         Размещает случайные ловушки и монеты в лабиринте.
 
         :param num_traps: Количество ловушек для размещения.
         :param num_coins: Количество монет для размещения.
         """
-        empty_cells = [(x, y) for y in range(self.height) for x in
-                       range(self.width) if self.maze[y][x] == ' ']
+        print("Размещаем поверхности в случайных местах...")
+        empty_cells: List[Tuple[int, int]] = [(x, y) for y in
+                                              range(self.height) for x in
+                                              range(self.width) if
+                                              self.maze[y][x] == ' ']
         random.shuffle(empty_cells)
-
         for _ in range(num_traps):
             if empty_cells:
                 x, y = empty_cells.pop()

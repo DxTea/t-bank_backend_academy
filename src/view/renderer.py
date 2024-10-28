@@ -1,5 +1,6 @@
 import os
 import random
+from typing import Tuple, List, Optional
 
 from src.view.renderer_interface import IRenderer
 from src.maze.maze import Maze
@@ -8,20 +9,23 @@ from src.maze.maze import Maze
 class ConsoleRenderer(IRenderer):
 
     def __init__(self):
-        self.start = None
-        self.start_symbol = None
-        self.finish = None
-        self.finish_symbol = None
-
-    def render_maze(self, maze_obj: Maze):
         """
-        Метод для отображения лабиринта в консоли.
+        Инициализирует объект ConsoleRenderer.
+        """
+        self.start: Optional[Tuple[int, int]] = None
+        self.start_symbol: Optional[str] = None
+        self.finish: Optional[Tuple[int, int]] = None
+        self.finish_symbol: Optional[str] = None
+
+    def render_maze(self, maze_obj: Maze) -> None:
+        """
+        Отображает лабиринт в консоли.
 
         :param maze_obj: Объект лабиринта, который нужно отобразить.
         """
-        maze = maze_obj.get_maze()
-        width = maze_obj.get_width() + 2
-        height = maze_obj.get_height() + 2
+        maze: List[List[str]] = maze_obj.get_maze()
+        width: int = maze_obj.get_width() + 2
+        height: int = maze_obj.get_height() + 2
         if self.start is None or self.finish is None:
             self.start, self.start_symbol = self.get_start_position()
             self.finish, self.finish_symbol = self.get_finish_position(width,
@@ -36,7 +40,7 @@ class ConsoleRenderer(IRenderer):
                 elif x == 0 or y == 0 or x == width - 1 or y == height - 1:
                     print('⬛', end='')
                 else:
-                    cell = maze[y - 1][x - 1]
+                    cell: str = maze[y - 1][x - 1]
                     surface = maze_obj.get_surface(x - 1, y - 1)
                     if surface:
                         print(surface.symbol, end='')
@@ -49,27 +53,45 @@ class ConsoleRenderer(IRenderer):
             print()
 
     @staticmethod
-    def get_start_position():
-        start_positions = [(1, 0), (0, 1)]
-        start = random.choice(start_positions)
-        start_symbol = '⬇️' if start == (1, 0) else '➡️'
+    def get_start_position() -> Tuple[Tuple[int, int], str]:
+        """
+        Возвращает стартовую позицию и символ для отображения.
+
+        :return: Кортеж, содержащий стартовую позицию и символ.
+        """
+        start_positions: List[Tuple[int, int]] = [(1, 0), (0, 1)]
+        start: Tuple[int, int] = random.choice(start_positions)
+        start_symbol: str = '⬇️' if start == (1, 0) else '➡️'
         return start, start_symbol
 
     @staticmethod
-    def get_finish_position(width, height):
-        finish_positions = [(width - 2, height - 1), (width - 1, height - 2)]
-        finish = random.choice(finish_positions)
-        finish_symbol = '⬇️' if finish == (width - 2, height - 1) else '➡️'
+    def get_finish_position(width: int, height: int) -> (
+            Tuple)[Tuple[int, int], str]:
+        """
+        Возвращает финишную позицию и символ для отображения.
+
+        :param width: Ширина лабиринта.
+        :param height: Высота лабиринта.
+        :return: Кортеж, содержащий финишную позицию и символ.
+        """
+        finish_positions: List[Tuple[int, int]] = [(width - 2, height - 1),
+                                                   (width - 1, height - 2)]
+        finish: Tuple[int, int] = random.choice(finish_positions)
+        finish_symbol: str = '⬇️' if finish == (
+            width - 2, height - 1) else '➡️'
         return finish, finish_symbol
 
-    def render_game(self, game):
-        # os.system('cls' if os.name == 'nt' else 'clear')
+    def render_game(self, game) -> None:
+        """
+        Отображает игру в консоли.
 
-        maze = game.maze
-        player_pos = game.player.position
-        exit_pos = game.exit
-        width = len(maze[0]) + 2
-        height = len(maze) + 2
+        :param game: Объект игры, который нужно отобразить.
+        """
+        maze: List[List[str]] = game.maze
+        player_pos: Tuple[int, int] = game.player.position
+        exit_pos: Tuple[int, int] = game.exit
+        width: int = len(maze[0]) + 2
+        height: int = len(maze) + 2
         if self.start is None or self.finish is None:
             self.start, self.start_symbol = self.get_start_position()
             self.finish, self.finish_symbol = self.get_finish_position(width,
@@ -90,19 +112,19 @@ class ConsoleRenderer(IRenderer):
                 elif x == 0 or y == 0 or x == width - 1 or y == height - 1:
                     print('⬛', end='')
                 else:
-                    cell = maze[y - 1][x - 1]
+                    cell: str = maze[y - 1][x - 1]
                     surface = game.maze_obj.get_surface(x - 1, y - 1)
                     if surface:
                         print(surface.symbol, end='')
                     elif cell == '#':
                         print('⬛', end='')
                     elif cell == '1':
-                        print('🔳', end='')  # Green square for the path
+                        print('🔳', end='')
                     else:
                         print('⬜', end='')
             print()
 
-    def reset_positions(self):
+    def reset_positions(self) -> None:
         """
         Сбрасывает стартовую и финишную позиции.
         """
@@ -111,23 +133,24 @@ class ConsoleRenderer(IRenderer):
         self.finish = None
         self.finish_symbol = None
 
-    def display_welcome_screen(self):
+    def display_welcome_screen(self) -> None:
         """
-        Метод для отображения приветственного экрана.
+        Отображает приветственный экран.
         """
         os.system('cls' if os.name == 'nt' else 'clear')
         print("Добро пожаловать в игру Лабиринт!")
-        print("Версия игры: 1.1.0")
+        print("Версия игры: 1.2.0")
         print("Разработчик: Семён Давыдов aka DxTea")
-        print("Инструкция: Поиграйте в прохождение лабиринта или выберите "
-              "автоматическое решение одним из алгоритмов.")
+        print(
+            "Инструкция: Поиграйте в прохождение лабиринта или выберите "
+            "автоматическое решение одним из алгоритмов.")
         print("Лицензия: MIT")
         print("=========================")
         print("Нажмите ПРОБЕЛ, чтобы продолжить...")
 
-    def display_build_maze_with_solution_menu(self, menu):
+    def display_build_maze_with_solution_menu(self, menu) -> None:
         """
-        Метод для отображения меню построения лабиринта с решением.
+        Отображает меню построения лабиринта с решением.
 
         :param menu: Объект меню, который нужно отобразить.
         """
@@ -145,18 +168,19 @@ class ConsoleRenderer(IRenderer):
         print("8. Выйти")
 
     @staticmethod
-    def display_complicate_generation_menu(menu):
+    def display_complicate_generation_menu(menu) -> None:
         """
-        Метод для отображения меню усложненной генерации.
+        Отображает меню усложненной генерации.
 
         :param menu: Объект меню, который нужно отобразить.
         """
         os.system('cls' if os.name == 'nt' else 'clear')
+        complicate_generation = menu.settings_manager.complicate_generation
         print("Настройки усложненной генерации")
         print("===============================")
         print(
             f"Усложненная генерация: "
-            f"{'Включена' if menu.complicate_generation else 'Выключена'}")
+            f"{'Включена' if complicate_generation else 'Выключена'}")
         print("1. Переключить усложненную генерацию")
         print("2. Выбрать первый алгоритм")
         print("3. Выбрать второй алгоритм")
@@ -164,37 +188,40 @@ class ConsoleRenderer(IRenderer):
         print("5. Выйти")
 
     @staticmethod
-    def display_common_settings(menu, show_solution_algorithm=True):
+    def display_common_settings(menu,
+                                show_solution_algorithm: bool = True) -> None:
         """
-        Метод для отображения общих настроек.
+        Отображает общие настройки.
 
         :param menu: Объект меню, который нужно отобразить.
         :param show_solution_algorithm: Флаг, указывающий, нужно ли
         отображать алгоритм решения.
         """
         os.system('cls' if os.name == 'nt' else 'clear')
-        print(f"Текущие настройки:")
-        if menu.complicate_generation:
-            if len(menu.selected_algorithms) < 2:
+        settings = menu.settings_manager
+        print("Текущие настройки:")
+        if settings.complicate_generation:
+            if len(settings.selected_algorithms) < 2:
                 print("Алгоритм генерации: Случайный + Случайный")
             else:
                 print(
-                    f"Алгоритм генерации: {menu.selected_algorithms[0]} + "
-                    f"{menu.selected_algorithms[1]}")
+                    f"Алгоритм генерации: {settings.selected_algorithms[0]} "
+                    f"+ {settings.selected_algorithms[1]}")
         else:
-            print(f"Алгоритм генерации: {menu.generation_algorithm}")
+            print(f"Алгоритм генерации: {settings.generation_algorithm}")
         if show_solution_algorithm:
-            print(f"Алгоритм решения: {menu.solution_algorithm}")
-        print(f"Размер лабиринта: {menu.maze_size}")
+            print(f"Алгоритм решения: {settings.solution_algorithm}")
+        print(f"Размер лабиринта: {settings.maze_size}")
         print(
-            f"Поверхности: {'Включены' if menu.surfaces_enabled else 'Выключены'}")
+            f"Поверхности: "
+            f"{'Включены' if settings.surfaces_enabled else 'Выключены'}")
         print(
             f"Усложненная генерация: "
-            f"{'Включена' if menu.complicate_generation else 'Выключена'}")
+            f"{'Включена' if settings.complicate_generation else 'Выключена'}")
 
-    def display_game_settings_menu(self, menu):
+    def display_game_settings_menu(self, menu) -> None:
         """
-        Метод для отображения меню настроек игры.
+        Отображает меню настроек игры.
 
         :param menu: Объект меню, который нужно отобразить.
         """
@@ -211,48 +238,51 @@ class ConsoleRenderer(IRenderer):
         print("7. Выйти")
 
     @staticmethod
-    def display_algorithm_menu(algorithms, title):
+    def display_algorithm_menu(algorithms: List[str], title: str) -> int:
         """
-        Метод для отображения меню выбора алгоритма.
+        Отображает меню выбора алгоритма.
 
         :param algorithms: Список доступных алгоритмов.
         :param title: Заголовок меню.
+        :return: Выбранный номер алгоритма.
         """
         os.system('cls' if os.name == 'nt' else 'clear')
         print(f"{title} Меню")
         print("================")
         for index, algorithm in enumerate(algorithms):
             print(f"{index}. {algorithm}")
-        choice = int(input("Введите номер вашего выбора:"))
+        choice: int = int(input("Введите номер вашего выбора:"))
         return choice
 
     @staticmethod
-    def display_menu(options):
+    def display_menu(options: List[str]) -> int:
         """
-        Метод для отображения основного меню.
+        Отображает основное меню.
 
         :param options: Список опций меню.
+        :return: Выбранный номер опции.
         """
         os.system('cls' if os.name == 'nt' else 'clear')
         print("Главное меню")
         print("=========")
         for index, option in enumerate(options, start=1):
             print(f"{index}. {option}")
-        choice = input("Введите номер вашего выбора: ")
-        return int(choice)
+        choice: int = int(input("Введите номер вашего выбора: "))
+        return choice
 
     @staticmethod
-    def display_surfaces_menu(menu):
+    def display_surfaces_menu(menu) -> None:
         """
-         Метод для отображения меню поверхностей.
+        Отображает меню поверхностей.
 
-         :param menu: Объект меню, который нужно отобразить.
-         """
+        :param menu: Объект меню, который нужно отобразить.
+        """
         os.system('cls' if os.name == 'nt' else 'clear')
         print("Настройки поверхностей")
         print("=================")
         print(
-            f"Поверхности: {'Включены' if menu.surfaces_enabled else 'Выключены'}")
+            f"Поверхности: "
+            f"{'Включены' if menu.surfaces_enabled else 'Выключены'}")
         print(f"Монеты: {menu.num_coins}")
         print(f"Ловушки: {menu.num_traps}")
         print("1. Переключить поверхности")
@@ -262,38 +292,43 @@ class ConsoleRenderer(IRenderer):
         print("5. Выйти")
 
     @staticmethod
-    def change_num_coins():
+    def change_num_coins_menu() -> int:
         """
-        Метод для изменения количества монет в лабиринте.
+        Изменяет количество монет в лабиринте.
+
+        :return: Новое количество монет.
         """
         os.system('cls' if os.name == 'nt' else 'clear')
         print("Изменить количество монет")
         print("======================")
         print("Монеты обозначаются символом '🪙'.")
         print("Каждая монета уменьшает эвристику на 5.")
-        num_coins = int(input("Введите количество монет: "))
+        num_coins: int = int(input("Введите количество монет: "))
         return num_coins
 
     @staticmethod
-    def change_num_traps():
+    def change_num_traps_menu() -> int:
         """
-        Метод для изменения количества ловушек в лабиринте.
+        Изменяет количество ловушек в лабиринте.
+
+        :return: Новое количество ловушек.
         """
         os.system('cls' if os.name == 'nt' else 'clear')
         print("Изменить количество ловушек")
         print("======================")
         print("Ловушки обозначаются символом '☠️'.")
         print("Каждая ловушка увеличивает эвристику на 10.")
-        num_traps = int(input("Введите количество ловушек: "))
+        num_traps: int = int(input("Введите количество ловушек: "))
         return num_traps
 
     @staticmethod
-    def preview_maze_size(width, height):
+    def preview_maze_size(width: int, height: int) -> str:
         """
-        Метод для предварительного просмотра размера лабиринта.
+        Отображает предварительный просмотр размера лабиринта.
 
         :param width: Ширина лабиринта.
         :param height: Высота лабиринта.
+        :return: Выбранный номер опции.
         """
         os.system('cls' if os.name == 'nt' else 'clear')
         print(f"Предварительный просмотр размера лабиринта: {width}x{height}")
@@ -309,25 +344,28 @@ class ConsoleRenderer(IRenderer):
         print("2. Нет")
         print("3. Назад в настройки игры")
         print("4. Выйти")
-        choice = input("Введите номер вашего выбора: ")
+        choice: str = input("Введите номер вашего выбора: ")
         return choice
 
     @staticmethod
-    def display_maze_info(first_algorithm, second_algorithm, width,
-                          height, surfaces_enabled, num_coins, num_traps,
-                          solution_algorithm=None):
+    def display_maze_info(first_algorithm: str,
+                          second_algorithm: Optional[str], width: int,
+                          height: int,
+                          surfaces_enabled: bool, num_coins: int,
+                          num_traps: int,
+                          solution_algorithm: Optional[str] = None) -> None:
         """
-                Метод для отображения информации о лабиринте.
+        Отображает информацию о лабиринте.
 
-                :param first_algorithm: Первый алгоритм генерации.
-                :param second_algorithm: Второй алгоритм генерации (если есть).
-                :param width: Ширина лабиринта.
-                :param height: Высота лабиринта.
-                :param surfaces_enabled: Включены ли поверхности.
-                :param num_coins: Количество монет.
-                :param num_traps: Количество ловушек.
-                :param solution_algorithm: Алгоритм решения (если есть).
-                """
+        :param first_algorithm: Первый алгоритм генерации.
+        :param second_algorithm: Второй алгоритм генерации (если есть).
+        :param width: Ширина лабиринта.
+        :param height: Высота лабиринта.
+        :param surfaces_enabled: Включены ли поверхности.
+        :param num_coins: Количество монет.
+        :param num_traps: Количество ловушек.
+        :param solution_algorithm: Алгоритм решения (если есть).
+        """
         print(
             f'Алгоритм генерации: {first_algorithm}'
             f'{" + " + second_algorithm if second_algorithm else ""}')
@@ -340,38 +378,38 @@ class ConsoleRenderer(IRenderer):
         print(f'Количество ловушек: {num_traps}')
 
     @staticmethod
-    def display_exit_message():
+    def display_exit_message() -> None:
         """
-        Метод для отображения сообщения о выходе из игры.
+        Отображает сообщение о выходе из игры.
         """
         print("Выход из игры...")
         print("Спасибо за игру!")
 
     @staticmethod
-    def display_error_message():
+    def display_error_message() -> None:
         """
-        Метод для отображения сообщения об ошибке. Invalid choice
+        Отображает сообщение об ошибке.
         """
         print("Неверный выбор. Пожалуйста, попробуйте снова.")
 
     @staticmethod
-    def render_maze_solved():
+    def render_maze_solved() -> None:
         """
-        Метод для отображения сообщения об успешном решении лабиринта.
+        Отображает сообщение об успешном решении лабиринта.
         """
         print("Лабиринт успешно решен!")
 
     @staticmethod
-    def render_no_solution():
+    def render_no_solution() -> None:
         """
-        Метод для отображения сообщения об отсутствии решения для лабиринта.
+        Отображает сообщение об отсутствии решения для лабиринта.
         """
         print("Решение для лабиринта не найдено.")
 
     @staticmethod
-    def render_options():
+    def render_options() -> None:
         """
-        Метод для отображения опций после генерации лабиринта.
+        Отображает опции после генерации лабиринта.
         """
         print("\nОпции:")
         print("1. Сгенерировать другой лабиринт с теми же параметрами")

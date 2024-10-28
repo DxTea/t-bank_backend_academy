@@ -1,9 +1,10 @@
 from abc import ABC, abstractmethod
+from typing import List, Tuple
 
 
 class ISolver(ABC):
     @abstractmethod
-    def solve_maze(self, algorithm):
+    def solve_maze(self, algorithm: str) -> List[Tuple[int, int]]:
         """
         Решает лабиринт, используя указанный алгоритм.
 

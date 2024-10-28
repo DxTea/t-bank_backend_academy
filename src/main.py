@@ -3,9 +3,9 @@ from src.handlers.menu_handler import Menu
 
 def main() -> None:
     menu = Menu()
-    menu.display_welcome_screen()
+    menu.welcome_screen()
     while True:
-        choice = menu.display_menu()
+        choice = menu.main_menu()
         menu.handle_choice(choice)
 
 

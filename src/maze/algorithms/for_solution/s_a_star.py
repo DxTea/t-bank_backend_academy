@@ -1,25 +1,28 @@
 import heapq
+from typing import List, Dict, Tuple, Set, Optional
 
 from src.maze.algorithms.for_solution.base_solver import BaseSolver
+from src.maze.maze import Maze
 
 
 class AStar(BaseSolver):
-    def __init__(self, maze):
+    def __init__(self, maze: Maze) -> None:
         """
         Инициализирует объект алгоритма A* для решения лабиринта.
 
         :param maze: Объект лабиринта, который нужно решить.
         """
         super().__init__(maze)
-        self.open_set = []
-        self.g_score = {self.start: 0}
-        self.f_score = {self.start: self._heuristic(self.start, self.finish)}
-        self.came_from = {}
-        self.visited = set()
+        self.open_set: List[Tuple[int, Tuple[int, int]]] = []
+        self.g_score: Dict[Tuple[int, int], int] = {self.start: 0}
+        self.f_score: Dict[Tuple[int, int], int] = {
+            self.start: self._heuristic(self.start, self.finish)}
+        self.came_from: Dict[Tuple[int, int], Optional[Tuple[int, int]]] = {}
+        self.visited: Set[Tuple[int, int]] = set()
 
         heapq.heappush(self.open_set, (self.f_score[self.start], self.start))
 
-    def solve(self):
+    def solve(self) -> bool:
         """
         Решает лабиринт, используя алгоритм A*.
 
@@ -35,18 +38,18 @@ class AStar(BaseSolver):
             self.visited.add(current)
 
             for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-                neighbor = (current[0] + dx, current[1] + dy)
+                neighbor: Tuple[int, int] = (current[0] + dx, current[1] + dy)
                 if (0 <= neighbor[0] < self.width and 0 <= neighbor[1] <
                         self.height):
                     if neighbor in self.visited:
                         continue
                     if self.maze[neighbor[1]][neighbor[0]] in [' ', '🪙', '☠️']:
-                        tentative_g_score = self.g_score[
-                                                current] + self.get_cost(
+                        tentative_g_score: int = self.g_score[
+                                                     current] + self.get_cost(
                             neighbor[0], neighbor[1])
 
-                        if (neighbor not in self.g_score or tentative_g_score
-                                < self.g_score[neighbor]):
+                        if (neighbor not in self.g_score or
+                                tentative_g_score < self.g_score[neighbor]):
                             self.came_from[neighbor] = current
                             self.g_score[neighbor] = tentative_g_score
                             self.f_score[
@@ -59,7 +62,7 @@ class AStar(BaseSolver):
 
         return False
 
-    def _heuristic(self, a, b):
+    def _heuristic(self, a: Tuple[int, int], b: Tuple[int, int]) -> int:
         """
         Вычисляет эвристическую оценку расстояния от точки a до точки b.
 
@@ -67,7 +70,7 @@ class AStar(BaseSolver):
         :param b: Координаты точки b.
         :return: Эвристическая оценка расстояния.
         """
-        base_heuristic = abs(a[0] - b[0]) + abs(a[1] - b[1])
+        base_heuristic: int = abs(a[0] - b[0]) + abs(a[1] - b[1])
         surface = self.maze_obj.get_surface(a[0], a[1])
         if surface:
             if surface.symbol == '🪙':
@@ -78,18 +81,17 @@ class AStar(BaseSolver):
                 # Увеличиваем эвристику на 10 для ловушки
         return base_heuristic
 
-    def _mark_path(self, current):
+    def _mark_path(self, current: Tuple[int, int]) -> None:
         """
         Отмечает найденный путь в лабиринте и вычисляет общий счет.
 
         :param current: Текущая клетка.
         """
-        total_score = 0
+        total_score: int = 0
         while current in self.came_from:
             surface = self.maze_obj.get_surface(current[0], current[1])
             if surface:
                 if surface.symbol == '🪙':
-                    print(f"Монетка собрана на координатах: {current}")
                     total_score -= 5  # Вычитаем 5 за монетку
                 elif surface.symbol == '☠️':
                     total_score += 10  # Добавляем 10 за ловушку

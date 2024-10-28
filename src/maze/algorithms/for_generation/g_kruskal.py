@@ -1,24 +1,26 @@
 import random
+from typing import List, Tuple, Dict
+
 from src.maze.algorithms.for_generation.base_maze_generator import \
     BaseMazeGenerator
 
 
 class Kruskal(BaseMazeGenerator):
-    def __init__(self, maze):
+    def __init__(self, maze) -> None:
         """
         Инициализирует объект алгоритма Краскала для генерации лабиринта.
 
         :param maze: Объект лабиринта, который нужно сгенерировать.
         """
         super().__init__(maze)
-        self.edges = []
-        self.parent = {}
-        self.rank = {}
+        self.edges: List[Tuple[Tuple[int, int], Tuple[int, int]]] = []
+        self.parent: Dict[Tuple[int, int], Tuple[int, int]] = {}
+        self.rank: Dict[Tuple[int, int], int] = {}
         self._initialize_maze()
         self._generate_maze_kruskal()
         self._set_exit()
 
-    def _initialize_maze(self):
+    def _initialize_maze(self) -> None:
         """
         Инициализирует лабиринт, устанавливая начальные пустые клетки и
         добавляя возможные ребра.
@@ -32,7 +34,7 @@ class Kruskal(BaseMazeGenerator):
                     if y + 2 < self.height:
                         self.edges.append(((x, y), (x, y + 2)))
 
-    def _find(self, node):
+    def _find(self, node: Tuple[int, int]) -> Tuple[int, int]:
         """
         Находит корень множества для заданного узла с использованием сжатия
         пути.
@@ -44,7 +46,7 @@ class Kruskal(BaseMazeGenerator):
             self.parent[node] = self._find(self.parent[node])
         return self.parent[node]
 
-    def _union(self, node1, node2):
+    def _union(self, node1: Tuple[int, int], node2: Tuple[int, int]) -> None:
         """
         Объединяет два множества с использованием рангов.
 
@@ -61,7 +63,7 @@ class Kruskal(BaseMazeGenerator):
                 if self.rank[root1] == self.rank[root2]:
                     self.rank[root2] += 1
 
-    def _generate_maze_kruskal(self):
+    def _generate_maze_kruskal(self) -> None:
         """
         Генерирует лабиринт с использованием алгоритма Краскала.
         """

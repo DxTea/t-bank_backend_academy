@@ -1,11 +1,12 @@
 import random
 
+from typing import List, Tuple
 from src.maze.algorithms.for_generation.base_maze_generator import \
     BaseMazeGenerator
 
 
 class RecursiveBacktracking(BaseMazeGenerator):
-    def __init__(self, maze):
+    def __init__(self, maze) -> None:
         """
         Инициализирует объект алгоритма рекурсивного поиска в глубину для
         генерации лабиринта.
@@ -16,7 +17,7 @@ class RecursiveBacktracking(BaseMazeGenerator):
         self._generate_maze()
         self._set_exit()
 
-    def _generate_maze(self):
+    def _generate_maze(self) -> None:
         """
         Генерирует лабиринт, начиная с верхнего левого угла.
         """
@@ -24,14 +25,14 @@ class RecursiveBacktracking(BaseMazeGenerator):
         self.maze[start_y][start_x] = ' '
         self._carve_passages_from(start_x, start_y)
 
-    def _carve_passages_from(self, cx, cy):
+    def _carve_passages_from(self, cx: int, cy: int) -> None:
         """
         Рекурсивно создает проходы в лабиринте, начиная с заданной клетки.
 
         :param cx: Координата x текущей клетки.
         :param cy: Координата y текущей клетки.
         """
-        directions = [(0, 2), (2, 0), (0, -2), (-2, 0)]
+        directions: List[Tuple[int, int]] = [(0, 2), (2, 0), (0, -2), (-2, 0)]
         random.shuffle(directions)
         for dx, dy in directions:
             nx, ny = cx + dx, cy + dy
