@@ -5,7 +5,6 @@ from src.maze.algorithms.for_generation.g_recursive_backtracking import \
     RecursiveBacktracking
 from src.maze.algorithms.for_generation.g_bin_tree import BinaryTreeMaze
 from src.maze.maze import Maze
-from typing import List
 
 
 class Generator(IGenerator):
@@ -18,7 +17,7 @@ class Generator(IGenerator):
         """
         self.maze = Maze(width, height)
 
-    def generate_maze(self, algorithm: str) -> List[List[str]]:
+    def generate_maze(self, algorithm: str) -> Maze:
         """
         Генерирует лабиринт, используя указанный алгоритм.
 

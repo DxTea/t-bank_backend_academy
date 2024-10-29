@@ -18,6 +18,8 @@ class TestMenu(unittest.TestCase):
         self.menu._surfaces_menu = MagicMock()
         self.menu._complicate_generation_menu = MagicMock()
         self.menu.exit_game = MagicMock()
+        self.menu.settings_manager.selected_algorithms = ['Прим', 'Краскал']
+        self.menu.main_menu = MagicMock()
 
     @patch('builtins.input', return_value='1')
     def test_build_maze_with_solution_menu_option_1(self, mock_input):
@@ -89,6 +91,197 @@ class TestMenu(unittest.TestCase):
             return_value='4')  # Simulate '4' to break loop
         self.menu._surfaces_menu()
         # Ensure the loop breaks without calling any other method
+
+    @patch('builtins.input', side_effect=['2', '4'])
+    def test_complicate_generation_menu_option_2(self, mock_input):
+        self.menu.input_handler.get_choice = MagicMock(
+            side_effect=['2', '4'])  # Simulate '2', then '4' to break loop
+
+        # Ensure the method is not mocked
+        self.menu._complicate_generation_menu = Menu._complicate_generation_menu.__get__(
+            self.menu)
+
+        self.menu._complicate_generation_menu()
+        self.menu.settings_manager.select_first_algorithm.assert_called_once()
+
+        self.assertIn('Прим', self.menu.settings_manager.selected_algorithms)
+
+    @patch('builtins.input', return_value='3')
+    def test_complicate_generation_menu_option_3(self, mock_input):
+        self.menu.input_handler.get_choice = MagicMock(
+            side_effect=['3', '4'])  # Simulate '3' then '4' to break loop
+        self.menu._complicate_generation_menu = Menu._complicate_generation_menu.__get__(
+            self.menu)
+
+        self.menu._complicate_generation_menu()
+        self.menu.settings_manager.select_second_algorithm.assert_called_once()
+
+        self.assertIn('Краскал',
+                      self.menu.settings_manager.selected_algorithms)
+
+    @patch('builtins.input', side_effect=['5', '4'])
+    def test_complicate_generation_menu_option_5(self, mock_input):
+        self.menu.input_handler.get_choice = MagicMock(
+            side_effect=['5', '4'])  # Simulate '5' then '4' to break loop
+
+        # Ensure the method is not mocked
+        self.menu._complicate_generation_menu = Menu._complicate_generation_menu.__get__(
+            self.menu)
+
+        self.menu._complicate_generation_menu()
+
+        self.menu.exit_game.assert_called_once()
+
+    @patch('builtins.input', side_effect=['1', '4'])
+    def test_surfaces_menu_option_1(self, mock_input):
+        self.menu.input_handler.get_choice = MagicMock(
+            side_effect=['1', '4'])  # Simulate '1' then '4' to break loop
+
+        # Ensure the method is not mocked
+        self.menu._surfaces_menu = Menu._surfaces_menu.__get__(self.menu)
+        self.menu._surfaces_menu()
+        self.menu.settings_manager.toggle_surfaces.assert_called_once()
+
+    @patch('builtins.input', side_effect=['2', '4'])
+    def test_surfaces_menu_option_2(self, mock_input):
+        self.menu.input_handler.get_choice = MagicMock(
+            side_effect=['2', '4'])  # Simulate '2' then '4' to break loop
+
+        # Ensure the method is not mocked
+        self.menu._surfaces_menu = Menu._surfaces_menu.__get__(self.menu)
+        self.menu._surfaces_menu()
+        self.menu.settings_manager.change_num_coins.assert_called_once()
+
+    @patch('builtins.input', side_effect=['3', '4'])
+    def test_surfaces_menu_option_3(self, mock_input):
+        self.menu.input_handler.get_choice = MagicMock(
+            side_effect=['3', '4'])  # Simulate '3' then '4' to break loop
+
+        # Ensure the method is not mocked
+        self.menu._surfaces_menu = Menu._surfaces_menu.__get__(self.menu)
+        self.menu._surfaces_menu()
+        self.menu.settings_manager.change_num_traps.assert_called_once()
+
+    @patch('builtins.input', side_effect=['5', '4'])
+    def test_surfaces_menu_option_5(self, mock_input):
+        self.menu.input_handler.get_choice = MagicMock(
+            side_effect=['5', '4'])  # Simulate '5' then '4' to break loop
+
+        # Ensure the method is not mocked
+        self.menu._surfaces_menu = Menu._surfaces_menu.__get__(self.menu)
+        self.menu._surfaces_menu()
+        self.menu.exit_game.assert_called_once()
+
+    @patch('builtins.input', side_effect=['invalid', '4'])
+    def test_surfaces_menu_invalid_option(self, mock_input):
+        self.menu.input_handler.get_choice = MagicMock(
+            side_effect=['invalid',
+                         '4'])  # Simulate invalid input then '4' to break loop
+
+        # Ensure the method is not mocked
+        self.menu._surfaces_menu = Menu._surfaces_menu.__get__(self.menu)
+        self.menu._surfaces_menu()
+        self.menu.renderer.display_error_message.assert_called_once()
+
+    @patch('builtins.input', return_value='1')
+    def test_game_settings_menu_option_1(self, mock_input):
+        self.menu.input_handler.get_choice = MagicMock(
+            side_effect=['1', '6'])  # Simulate '1' then '6' to break loop
+        self.menu.game_settings_menu()
+        self.menu.maze_manager.start_game.assert_called_once()
+
+    @patch('builtins.input', return_value='2')
+    def test_game_settings_menu_option_2(self, mock_input):
+        self.menu.input_handler.get_choice = MagicMock(
+            side_effect=['2', '6'])  # Simulate '2' then '6' to break loop
+        self.menu.settings_manager.complicate_generation = False
+        self.menu.game_settings_menu()
+        self.menu.settings_manager.change_generation_algorithm.assert_called_once()
+
+    @patch('builtins.input', return_value='3')
+    def test_game_settings_menu_option_3(self, mock_input):
+        self.menu.input_handler.get_choice = MagicMock(
+            side_effect=['3', '6'])  # Simulate '3' then '6' to break loop
+        self.menu.game_settings_menu()
+        self.menu.settings_manager.change_maze_size.assert_called_once()
+
+    @patch('builtins.input', return_value='4')
+    def test_game_settings_menu_option_4(self, mock_input):
+        self.menu.input_handler.get_choice = MagicMock(
+            side_effect=['4', '6'])  # Simulate '4' then '6' to break loop
+        self.menu.game_settings_menu()
+        self.menu._surfaces_menu.assert_called_once()
+
+    @patch('builtins.input', return_value='5')
+    def test_game_settings_menu_option_5(self, mock_input):
+        self.menu.input_handler.get_choice = MagicMock(
+            side_effect=['5', '6'])  # Simulate '5' then '6' to break loop
+        self.menu.game_settings_menu()
+        self.menu._complicate_generation_menu.assert_called_once()
+
+    @patch('builtins.input', return_value='6')
+    def test_game_settings_menu_option_6(self, mock_input):
+        self.menu.input_handler.get_choice = MagicMock(
+            return_value='6')  # Simulate '6' to break loop
+        self.menu.game_settings_menu()
+        self.menu.main_menu.assert_called_once()
+
+    @patch('builtins.input', return_value='7')
+    def test_game_settings_menu_option_7(self, mock_input):
+        self.menu.input_handler.get_choice = MagicMock(
+            side_effect=['7', '6'])  # Simulate '7' then '6' to break loop
+        self.menu.game_settings_menu()
+        self.menu.exit_game.assert_called_once()
+
+    @patch('builtins.input', return_value='invalid')
+    def test_game_settings_menu_invalid_option(self, mock_input):
+        self.menu.input_handler.get_choice = MagicMock(
+            side_effect=['invalid',
+                         '6'])  # Simulate invalid input then '6' to break loop
+        self.menu.game_settings_menu()
+        self.menu.renderer.display_error_message.assert_called_once()
+
+    @patch('builtins.input', return_value='1')
+    def test_main_menu_option_1(self, mock_input):
+        self.menu.renderer.display_menu = MagicMock(return_value=1)
+        self.menu.main_menu = Menu.main_menu.__get__(self.menu)
+        choice = self.menu.main_menu()
+        self.assertEqual(choice, 1)
+
+    @patch('builtins.input', return_value='2')
+    def test_main_menu_option_2(self, mock_input):
+        self.menu.renderer.display_menu = MagicMock(return_value=2)
+        self.menu.main_menu = Menu.main_menu.__get__(self.menu)
+        choice = self.menu.main_menu()
+        self.assertEqual(choice, 2)
+
+    @patch('builtins.input', return_value='3')
+    def test_main_menu_option_3(self, mock_input):
+        self.menu.renderer.display_menu = MagicMock(return_value=3)
+        self.menu.main_menu = Menu.main_menu.__get__(self.menu)
+        choice = self.menu.main_menu()
+        self.assertEqual(choice, 3)
+
+    @patch.object(Menu, 'game_settings_menu')
+    def test_handle_choice_option_1(self, mock_game_settings_menu):
+        self.menu.handle_choice(1)
+        mock_game_settings_menu.assert_called_once()
+
+    @patch.object(Menu, '_build_maze_with_solution_menu')
+    def test_handle_choice_option_2(self, mock_build_maze_with_solution_menu):
+        self.menu.handle_choice(2)
+        mock_build_maze_with_solution_menu.assert_called_once()
+
+    @patch.object(Menu, 'exit_game')
+    def test_handle_choice_option_3(self, mock_exit_game):
+        self.menu.handle_choice(3)
+        self.menu.exit_game.assert_called_once()
+
+
+    def test_handle_choice_invalid_option(self):
+        self.menu.renderer.display_error_message = MagicMock()
+        self.menu.handle_choice(4)
+        self.menu.renderer.display_error_message.assert_called_once()
 
 
 if __name__ == '__main__':

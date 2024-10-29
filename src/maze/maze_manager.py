@@ -3,6 +3,7 @@ from typing import Tuple, Optional
 
 from src.game.game import Game
 from src.maze.generation.generator import Generator
+from src.maze.maze import Maze
 from src.maze.solution.solver import Solver
 
 
@@ -55,7 +56,7 @@ class MazeManager:
 
     @staticmethod
     def generate_maze(width: int, height: int, first_algorithm: str,
-                      second_algorithm: Optional[str]):
+                      second_algorithm: Optional[str]) -> Maze:
         """
         Генерирует лабиринт с использованием указанных алгоритмов.
 
@@ -66,9 +67,7 @@ class MazeManager:
         :return: Сгенерированный лабиринт.
         """
         generator = Generator(width, height)
-        maze = generator.generate_maze(first_algorithm)
-        print("generate maze")
-        print(maze)
+        maze: Maze = generator.generate_maze(first_algorithm)
         if second_algorithm:
             maze = generator.generate_maze(second_algorithm)
         return maze
@@ -95,7 +94,6 @@ class MazeManager:
             maze = self.generate_maze(width, height, first_algorithm,
                                       second_algorithm)
             self.place_surfaces(maze)
-
             if settings.solution_algorithm == "Cлучайно":
                 chosen_solution_algorithm = random.choice(
                     settings.solution_algorithms[1:])

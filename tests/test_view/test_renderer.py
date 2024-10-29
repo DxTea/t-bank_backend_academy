@@ -2,6 +2,8 @@ import os
 import unittest
 from io import StringIO
 from unittest.mock import patch, MagicMock, call
+
+from src.maze.maze import Maze
 from src.view.renderer import ConsoleRenderer
 
 
@@ -197,6 +199,113 @@ class TestConsoleRenderer(unittest.TestCase):
         )
         self.assertEqual(mock_stdout.getvalue(), expected_output)
         mock_system.assert_called_with('cls' if os.name == 'nt' else 'clear')
+
+    @patch.object(ConsoleRenderer, 'get_start_position',
+                  return_value=((1, 1), 'S'))
+    @patch.object(ConsoleRenderer, 'get_finish_position',
+                  return_value=((3, 3), 'F'))
+    def test_render_maze_initial_positions(self, mock_get_finish_position,
+                                           mock_get_start_position):
+        renderer = ConsoleRenderer()
+        maze_mock = MagicMock(spec=Maze)
+        maze_mock.get_maze.return_value = [['#', '#', '#'], ['#', ' ', '#'],
+                                           ['#', '#', '#']]
+        maze_mock.get_width.return_value = 3
+        maze_mock.get_height.return_value = 3
+
+        renderer.render_maze(maze_mock)
+
+        self.assertEqual(renderer.start, (1, 1))
+        self.assertEqual(renderer.start_symbol, 'S')
+        self.assertEqual(renderer.finish, (3, 3))
+        self.assertEqual(renderer.finish_symbol, 'F')
+
+    def test_reset_positions(self):
+        renderer = ConsoleRenderer()
+        renderer.start = (1, 1)
+        renderer.start_symbol = 'S'
+        renderer.finish = (3, 3)
+        renderer.finish_symbol = 'F'
+
+        renderer.reset_positions()
+
+        self.assertIsNone(renderer.start)
+        self.assertIsNone(renderer.start_symbol)
+        self.assertIsNone(renderer.finish)
+        self.assertIsNone(renderer.finish_symbol)
+
+    @patch('os.system')
+    @patch('sys.stdout', new_callable=StringIO)
+    def test_display_build_maze_with_solution_menu(self, mock_stdout,
+                                                   mock_system):
+        menu = MagicMock()
+        menu.settings_manager.generation_algorithm = "Случайный + Случайный"
+        menu.settings_manager.solution_algorithm = "A*"
+        menu.settings_manager.maze_size = "10x10"
+        menu.settings_manager.surfaces_enabled = True
+        menu.settings_manager.complicate_generation = True
+
+        renderer = ConsoleRenderer()
+        renderer.display_build_maze_with_solution_menu(menu)
+
+        expected_output = (
+            "Настройки построения лабиринта с решением\n"
+            "=================================\n"
+            "Текущие настройки:\n"
+            "Алгоритм генерации: Случайный + Случайный\n"
+            "Алгоритм решения: A*\n"
+            "Размер лабиринта: 10x10\n"
+            "Поверхности: Включены\n"
+            "Усложненная генерация: Включена\n"
+            "1. Построить лабиринт с решением\n"
+            "2. Изменить алгоритм генерации\n"
+            "3. Изменить алгоритм решения\n"
+            "4. Изменить размер лабиринта\n"
+            "5. Переключить поверхности\n"
+            "6. Настройки усложненной генерации\n"
+            "7. Назад в главное меню\n"
+            "8. Выйти\n"
+        )
+        self.assertEqual(mock_stdout.getvalue(), expected_output)
+        mock_system.assert_has_calls([
+            call('cls' if os.name == 'nt' else 'clear'),
+            call('cls' if os.name == 'nt' else 'clear')
+        ])
+
+    @patch('os.system')
+    @patch('sys.stdout', new_callable=StringIO)
+    def test_display_game_settings_menu(self, mock_stdout, mock_system):
+        menu = MagicMock()
+        menu.settings_manager.generation_algorithm = "Случайный + Случайный"
+        menu.settings_manager.solution_algorithm = "A*"
+        menu.settings_manager.maze_size = "10x10"
+        menu.settings_manager.surfaces_enabled = True
+        menu.settings_manager.complicate_generation = True
+
+        renderer = ConsoleRenderer()
+        renderer.display_game_settings_menu(menu)
+
+        expected_output = (
+            "Настройки игры\n"
+            "=============\n"
+            "Текущие настройки:\n"
+            "Алгоритм генерации: Случайный + Случайный\n"
+            "Размер лабиринта: 10x10\n"
+            "Поверхности: Включены\n"
+            "Усложненная генерация: Включена\n"
+            "1. Начать игру\n"
+            "2. Изменить алгоритм генерации\n"
+            "3. Изменить размер лабиринта\n"
+            "4. Переключить поверхности\n"
+            "5. Настройки усложненной генерации\n"
+            "6. Назад в главное меню\n"
+            "7. Выйти\n"
+        )
+        self.assertEqual(mock_stdout.getvalue(), expected_output)
+        mock_system.assert_has_calls([
+            call('cls' if os.name == 'nt' else 'clear'),
+            call('cls' if os.name == 'nt' else 'clear')
+        ])
 
 
 if __name__ == '__main__':
