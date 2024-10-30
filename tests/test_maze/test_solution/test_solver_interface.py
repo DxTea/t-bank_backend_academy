@@ -1,5 +1,3 @@
-# tests/test_maze/test_solution/test_solver_interface.py
-
 import unittest
 from unittest.mock import MagicMock
 

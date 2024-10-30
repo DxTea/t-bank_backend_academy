@@ -1,7 +1,5 @@
-# tests/test_maze/test_maze.py
-
 import unittest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 from src.maze.maze import Maze, Trap
 
 
@@ -36,6 +34,27 @@ class TestMaze(unittest.TestCase):
     def test_reset(self):
         self.maze.reset()
         self.maze.reset.assert_called_once()
+
+    @patch('random.shuffle')
+    def test_place_random_surfaces(self, mock_shuffle):
+        self.maze.set_surface = MagicMock()
+        mock_shuffle.side_effect = lambda x: x
+
+        self.maze.maze = [
+            [' ', ' ', ' '],
+            [' ', ' ', ' '],
+            [' ', ' ', ' ']
+        ]
+
+        self.maze.place_random_surfaces(num_traps=2, num_coins=1)
+
+        expected_calls = [
+            unittest.mock.call(1, 2, unittest.mock.ANY),
+            unittest.mock.call(0, 2, unittest.mock.ANY),
+            unittest.mock.call(2, 2, unittest.mock.ANY)
+        ]
+        self.maze.set_surface.assert_has_calls(expected_calls, any_order=True)
+        self.assertEqual(self.maze.set_surface.call_count, 3)
 
 
 if __name__ == '__main__':

@@ -6,7 +6,6 @@ from src.maze.maze import Maze
 class TestDFS(unittest.TestCase):
 
     def setUp(self):
-        # Create a simple maze for testing
         self.maze_data = [
             [' ', ' ', ' ', ' '],
             [' ', '☠️', ' ', ' '],

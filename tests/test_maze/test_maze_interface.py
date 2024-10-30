@@ -1,4 +1,3 @@
-
 import unittest
 from src.maze.maze_interface import IMaze
 

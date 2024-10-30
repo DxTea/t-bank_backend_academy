@@ -33,7 +33,6 @@ class TestKruskal(unittest.TestCase):
 
     @patch('src.maze.algorithms.for_generation.g_kruskal.random.shuffle')
     def test_generate_maze_kruskal(self, mock_shuffle):
-        # Ensure the shuffle function does not change the order of elements
         mock_shuffle.side_effect = lambda x: x.sort()
         self.generator._generate_maze_kruskal()
         self.assertEqual(self.generator.maze[0][0], ' ')

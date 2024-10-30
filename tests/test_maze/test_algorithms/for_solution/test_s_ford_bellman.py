@@ -6,17 +6,16 @@ from src.maze.maze import Maze
 class TestFordBellman(unittest.TestCase):
 
     def setUp(self):
-        # Create a simple maze for testing
         self.maze_data = [
             [' ', ' ', ' ', ' '],
             [' ', '☠️', ' ', ' '],
             [' ', ' ', ' ', ' '],
             [' ', ' ', ' ', ' ']
         ]
-        self.maze = Maze(4, 4)  # Adjusted to pass width and height
-        self.maze.maze = self.maze_data  # Set the maze data
-        self.maze.start = (0, 0)  # Set the start attribute
-        self.maze.finish = (3, 3)  # Set the finish attribute
+        self.maze = Maze(4, 4)
+        self.maze.maze = self.maze_data
+        self.maze.start = (0, 0)
+        self.maze.finish = (3, 3)
         self.solver = FordBellman(self.maze)
 
     def test_initialization(self):
@@ -29,10 +28,9 @@ class TestFordBellman(unittest.TestCase):
         result = self.solver.solve()
         self.assertTrue(result)
         self.assertEqual(self.solver.distances[self.solver.finish],
-                         30)  # Adjusted expected value
+                         30)
 
     def test_detect_negative_cycle(self):
-        # Add a negative cycle to the maze
         self.solver.distances[(1, 1)] = -1
         self.solver.predecessors[(1, 1)] = (0, 0)
         self.solver.distances[(2, 1)] = -2

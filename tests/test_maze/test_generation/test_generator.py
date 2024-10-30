@@ -1,37 +1,59 @@
 import unittest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 from src.maze.maze import Maze
-from src.maze.algorithms.for_generation.g_kruskal import Kruskal
-from src.maze.algorithms.for_generation.g_prim import Prim
-from src.maze.algorithms.for_generation.g_recursive_backtracking import \
-    RecursiveBacktracking
-from src.maze.algorithms.for_generation.g_bin_tree import BinaryTreeMaze
+from src.maze.generation.generator import Generator
 
 
-class TestMazeGeneration(unittest.TestCase):
+class TestGenerator(unittest.TestCase):
 
     def setUp(self):
-        self.mock_maze = MagicMock(spec=Maze)
-        self.mock_maze.get_maze.return_value = [['#'] * 10 for _ in range(10)]
+        self.width = 10
+        self.height = 10
+        self.generator = Generator(self.width, self.height)
 
-    def test_unknown_algorithm(self):
+    def test_init(self):
+        self.assertIsInstance(self.generator.maze, Maze)
+        self.assertEqual(self.generator.maze.width, self.width)
+        self.assertEqual(self.generator.maze.height, self.height)
+
+    @patch('src.maze.algorithms.for_generation.g_kruskal.Kruskal.get_maze',
+           return_value=MagicMock())
+    def test_generate_maze_kruskal(self, mock_get_maze):
+        result = self.generator.generate_maze("Краскал")
+        self.assertTrue(mock_get_maze.called)
+        self.assertEqual(result, mock_get_maze.return_value)
+
+    @patch('src.maze.algorithms.for_generation.g_prim.Prim.get_maze',
+           return_value=MagicMock())
+    def test_generate_maze_prim(self, mock_get_maze):
+        result = self.generator.generate_maze("Прим")
+        self.assertTrue(mock_get_maze.called)
+        self.assertEqual(result, mock_get_maze.return_value)
+
+    @patch(
+        'src.maze.algorithms.for_generation.g_recursive_backtracking'
+        '.RecursiveBacktracking.get_maze',
+        return_value=MagicMock())
+    def test_generate_maze_recursive_backtracking(self, mock_get_maze):
+        result = self.generator.generate_maze(
+            "Рекурсивное обратное отслеживание")
+        self.assertTrue(mock_get_maze.called)
+        self.assertEqual(result, mock_get_maze.return_value)
+
+    @patch(
+        'src.maze.algorithms.for_generation.g_bin_tree.BinaryTreeMaze'
+        '.get_maze',
+        return_value=MagicMock())
+    def test_generate_maze_binary_tree(self, mock_get_maze):
+        result = self.generator.generate_maze("Двоичное дерево")
+        self.assertTrue(mock_get_maze.called)
+        self.assertEqual(result, mock_get_maze.return_value)
+
+    def test_generate_maze_unknown_algorithm(self):
         with self.assertRaises(ValueError) as context:
-            self._get_generator("Неизвестный алгоритм")
+            self.generator.generate_maze("Неизвестный алгоритм")
         self.assertEqual(str(context.exception),
                          "Неизвестный алгоритм: Неизвестный алгоритм")
-
-    def _get_generator(self, algorithm):
-        if algorithm == "Краскал":
-            generator = Kruskal(self.mock_maze)
-        elif algorithm == "Прим":
-            generator = Prim(self.mock_maze)
-        elif algorithm == "Рекурсивное обратное отслеживание":
-            generator = RecursiveBacktracking(self.mock_maze)
-        elif algorithm == "Двоичное дерево":
-            generator = BinaryTreeMaze(self.mock_maze)
-        else:
-            raise ValueError(f"Неизвестный алгоритм: {algorithm}")
-        return generator.get_maze()
 
 
 if __name__ == '__main__':

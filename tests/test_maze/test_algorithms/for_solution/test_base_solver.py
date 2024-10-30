@@ -1,5 +1,3 @@
-# tests/test_maze/test_algorithms/for_solution/test_base_solver.py
-
 import unittest
 from unittest.mock import MagicMock
 from src.maze.maze import Maze

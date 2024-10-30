@@ -1,5 +1,3 @@
-# tests/test_maze/test_algorithms/for_generation/test_base_maze_generator.py
-
 import unittest
 from unittest.mock import MagicMock
 from src.maze.maze import Maze

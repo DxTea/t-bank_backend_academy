@@ -1,5 +1,3 @@
-# tests/test_maze/test_algorithms/for_generation/test_g_bin_tree.py
-
 import unittest
 from unittest.mock import MagicMock, patch
 from src.maze.maze import Maze

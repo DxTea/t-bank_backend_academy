@@ -38,7 +38,7 @@ class TestGame(unittest.TestCase):
             self.game.play()
         self.assertTrue(self.game.game_started)
         self.assertEqual(self.game.player.position,
-                         (1, 1))  # Updated expected position
+                         (1, 1))
         mock_render_game.assert_called()
 
     @patch('src.game.game.Game.display_game_settings_menu',

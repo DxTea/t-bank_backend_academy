@@ -13,10 +13,10 @@ class TestAStar(unittest.TestCase):
         self.mock_maze.start = (0, 0)
         self.mock_maze.finish = (4, 4)
         self.mock_maze.get_cost = MagicMock(
-            return_value=1)  # Add get_cost method to mock
+            return_value=1)
         self.astar = AStar(self.mock_maze)
-        self.astar.width = 5  # Explicitly set width attribute
-        self.astar.height = 5  # Explicitly set height attribute
+        self.astar.width = 5
+        self.astar.height = 5
 
     def test_initialization(self):
         self.assertEqual(self.astar.start, (0, 0))

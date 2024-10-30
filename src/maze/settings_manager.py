@@ -115,12 +115,10 @@ class SettingsManager:
         """
         Метод для изменения количества монет в лабиринте.
         """
-        num_coins: int = self.menu.renderer.change_num_coins_menu()
-        self.num_coins = num_coins
+        self.num_coins = self.menu.renderer.change_num_coins_menu()
 
     def change_num_traps(self) -> None:
         """
         Метод для изменения количества ловушек в лабиринте.
         """
-        num_traps: int = self.menu.renderer.change_num_traps_menu()
-        self.num_traps = num_traps
+        self.num_traps = self.menu.renderer.change_num_traps_menu()

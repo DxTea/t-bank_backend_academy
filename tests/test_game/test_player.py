@@ -18,7 +18,7 @@ class TestPlayer(unittest.TestCase):
     def test_move_up(self):
         self.mock_maze[1][0] = ' '
         self.player.move('w', self.mock_maze, self.mock_maze_obj)
-        self.assertEqual(self.player.position, (0, 0))  # No move, at boundary
+        self.assertEqual(self.player.position, (0, 0))
 
     def test_move_down(self):
         self.mock_maze[1][0] = ' '
