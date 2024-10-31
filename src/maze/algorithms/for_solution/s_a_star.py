@@ -36,31 +36,52 @@ class AStar(BaseSolver):
                 return True
 
             self.visited.add(current)
-
-            for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-                neighbor: Tuple[int, int] = (current[0] + dx, current[1] + dy)
-                if (0 <= neighbor[0] < self.width and 0 <= neighbor[1] <
-                        self.height):
-                    if neighbor in self.visited:
-                        continue
-                    if self.maze[neighbor[1]][neighbor[0]] in [' ', '🪙', '☠️']:
-                        tentative_g_score: int = self.g_score[
-                                                     current] + self.get_cost(
-                            neighbor[0], neighbor[1])
-
-                        if (neighbor not in self.g_score or
-                                tentative_g_score < self.g_score[neighbor]):
-                            self.came_from[neighbor] = current
-                            self.g_score[neighbor] = tentative_g_score
-                            self.f_score[
-                                neighbor] = (tentative_g_score +
-                                             self._heuristic(
-                                                 neighbor, self.finish))
-                            if neighbor not in [i[1] for i in self.open_set]:
-                                heapq.heappush(self.open_set, (
-                                    self.f_score[neighbor], neighbor))
+            self._process_neighbors(current)
 
         return False
+
+    def _is_valid_neighbor(self, neighbor: Tuple[int, int]) -> bool:
+        """
+        Проверяет, является ли соседняя клетка допустимой для перемещения.
+
+        :param neighbor: Координаты соседней клетки.
+        :return: True, если соседняя клетка допустима, иначе False.
+        """
+        return (0 <= neighbor[0] < self.width and 0 <= neighbor[
+            1] < self.height and
+                neighbor not in self.visited and
+                self.maze[neighbor[1]][neighbor[0]] in [' ', '🪙', '☠️'])
+
+    def _update_scores(self, current: Tuple[int, int],
+                       neighbor: Tuple[int, int]) -> None:
+        """
+        Обновляет оценки g и f для соседней клетки.
+
+        :param current: Координаты текущей клетки.
+        :param neighbor: Координаты соседней клетки.
+        """
+        tentative_g_score: int = self.g_score[current] + self.get_cost(
+            neighbor[0], neighbor[1])
+        if (neighbor not in self.g_score or tentative_g_score <
+                self.g_score[neighbor]):
+            self.came_from[neighbor] = current
+            self.g_score[neighbor] = tentative_g_score
+            self.f_score[neighbor] = tentative_g_score + self._heuristic(
+                neighbor, self.finish)
+            if neighbor not in [i[1] for i in self.open_set]:
+                heapq.heappush(self.open_set,
+                               (self.f_score[neighbor], neighbor))
+
+    def _process_neighbors(self, current: Tuple[int, int]) -> None:
+        """
+        Обрабатывает всех соседей текущей клетки.
+
+        :param current: Координаты текущей клетки.
+        """
+        for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+            neighbor: Tuple[int, int] = (current[0] + dx, current[1] + dy)
+            if self._is_valid_neighbor(neighbor):
+                self._update_scores(current, neighbor)
 
     def _heuristic(self, a: Tuple[int, int], b: Tuple[int, int]) -> int:
         """
