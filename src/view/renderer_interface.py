@@ -1,8 +1,8 @@
-from abc import ABC, abstractmethod
-from typing import List, Any
+from abc import abstractmethod
+from typing import List, Any, Protocol
 
 
-class IRenderer(ABC):
+class IRenderer(Protocol):
     """
     Интерфейс IRenderer определяет контракт для всех классов, которые будут
     его реализовывать.

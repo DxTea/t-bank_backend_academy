@@ -1,8 +1,8 @@
-from abc import ABC, abstractmethod
-from typing import List, Tuple
+from abc import abstractmethod
+from typing import List, Tuple, Protocol
 
 
-class ISolver(ABC):
+class ISolver(Protocol):
     @abstractmethod
     def solve_maze(self, algorithm: str) -> List[Tuple[int, int]]:
         """

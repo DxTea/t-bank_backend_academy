@@ -1,8 +1,8 @@
-from abc import ABC, abstractmethod
-from typing import Any
+from abc import abstractmethod
+from typing import Any, Protocol
 
 
-class IGenerator(ABC):
+class IGenerator(Protocol):
     @abstractmethod
     def generate_maze(self, algorithm: str) -> Any:
         """

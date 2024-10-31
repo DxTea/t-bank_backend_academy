@@ -1,8 +1,8 @@
-from abc import ABC, abstractmethod
-from typing import List
+from abc import abstractmethod
+from typing import List, Protocol
 
 
-class IMaze(ABC):
+class IMaze(Protocol):
     @abstractmethod
     def get_width(self) -> int:
         """
