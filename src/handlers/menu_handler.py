@@ -28,30 +28,32 @@ class Menu:
             self.renderer.display_build_maze_with_solution_menu(self)
             choice: str = self.input_handler.get_choice(
                 "Введите номер вашего выбора: ")
-            if choice == '1':
-                self.maze_manager.build_maze_with_solution()
-            elif choice == '2':
-                if self.settings_manager.complicate_generation:
-                    print(
-                        "Чтобы выбрать алгоритм, сначала необходимо отключить "
-                        "настройки усложненной генерации.")
-                    input("Нажмите Enter, чтобы продолжить...")
-                else:
-                    self.settings_manager.change_generation_algorithm()
-            elif choice == '3':
-                self.settings_manager.change_solution_algorithm()
-            elif choice == '4':
-                self.settings_manager.change_maze_size()
-            elif choice == '5':
-                self._surfaces_menu()
-            elif choice == '6':
-                self._complicate_generation_menu()
-            elif choice == '7':
-                break
-            elif choice == '8':
-                self.exit_game()
-            else:
-                self.renderer.display_error_message()
+            match choice:
+                case '1':
+                    self.maze_manager.build_maze_with_solution()
+                case '2':
+                    if self.settings_manager.complicate_generation:
+                        print(
+                            "Чтобы выбрать алгоритм, сначала необходимо "
+                            "отключить "
+                            "настройки усложненной генерации.")
+                        input("Нажмите Enter, чтобы продолжить...")
+                    else:
+                        self.settings_manager.change_generation_algorithm()
+                case '3':
+                    self.settings_manager.change_solution_algorithm()
+                case '4':
+                    self.settings_manager.change_maze_size()
+                case '5':
+                    self._surfaces_menu()
+                case '6':
+                    self._complicate_generation_menu()
+                case '7':
+                    break
+                case '8':
+                    self.exit_game()
+                case _:
+                    self.renderer.display_error_message()
 
     def _complicate_generation_menu(self) -> None:
         """
@@ -62,19 +64,20 @@ class Menu:
             self.renderer.display_complicate_generation_menu(self)
             choice: str = self.input_handler.get_choice(
                 "Введите номер вашего выбора: ")
-            if choice == '1':
-                self.settings_manager.complicate_generation = not (
-                    self.settings_manager.complicate_generation)
-            elif choice == '2':
-                self.settings_manager.select_first_algorithm()
-            elif choice == '3':
-                self.settings_manager.select_second_algorithm()
-            elif choice == '4':
-                break
-            elif choice == '5':
-                self.exit_game()
-            else:
-                self.renderer.display_error_message()
+            match choice:
+                case '1':
+                    self.settings_manager.complicate_generation = not (
+                        self.settings_manager.complicate_generation)
+                case '2':
+                    self.settings_manager.select_first_algorithm()
+                case '3':
+                    self.settings_manager.select_second_algorithm()
+                case '4':
+                    break
+                case '5':
+                    self.exit_game()
+                case _:
+                    self.renderer.display_error_message()
 
     def main_menu(self) -> int:
         """
@@ -93,14 +96,15 @@ class Menu:
 
         :param choice: Выбор пользователя.
         """
-        if choice == 1:
-            self.game_settings_menu()
-        elif choice == 2:
-            self._build_maze_with_solution_menu()
-        elif choice == 3:
-            self.exit_game()
-        else:
-            self.renderer.display_error_message()
+        match choice:
+            case 1:
+                self.game_settings_menu()
+            case 2:
+                self._build_maze_with_solution_menu()
+            case 3:
+                self.exit_game()
+            case _:
+                self.renderer.display_error_message()
 
     def game_settings_menu(self) -> None:
         """
@@ -110,29 +114,31 @@ class Menu:
             self.renderer.display_game_settings_menu(self)
             choice: str = self.input_handler.get_choice(
                 "Введите номер вашего выбора: ")
-            if choice == '1':
-                self.maze_manager.start_game()
-            elif choice == '2':
-                if self.settings_manager.complicate_generation:
-                    print(
-                        "Чтобы выбрать алгоритм, сначала необходимо отключить "
-                        "настройки усложненной генерации.")
-                    input("Нажмите Enter, чтобы продолжить...")
-                else:
-                    self.settings_manager.change_generation_algorithm()
-            elif choice == '3':
-                self.settings_manager.change_maze_size()
-            elif choice == '4':
-                self._surfaces_menu()
-            elif choice == '5':
-                self._complicate_generation_menu()
-            elif choice == '6':
-                self.main_menu()
-                break
-            elif choice == '7':
-                self.exit_game()
-            else:
-                self.renderer.display_error_message()
+            match choice:
+                case '1':
+                    self.maze_manager.start_game()
+                case '2':
+                    if self.settings_manager.complicate_generation:
+                        print(
+                            "Чтобы выбрать алгоритм, сначала необходимо "
+                            "отключить "
+                            "настройки усложненной генерации.")
+                        input("Нажмите Enter, чтобы продолжить...")
+                    else:
+                        self.settings_manager.change_generation_algorithm()
+                case '3':
+                    self.settings_manager.change_maze_size()
+                case '4':
+                    self._surfaces_menu()
+                case '5':
+                    self._complicate_generation_menu()
+                case '6':
+                    self.main_menu()
+                    break
+                case '7':
+                    self.exit_game()
+                case _:
+                    self.renderer.display_error_message()
 
     def welcome_screen(self) -> None:
         """
@@ -159,18 +165,19 @@ class Menu:
             self.renderer.display_surfaces_menu(self)
             choice: str = self.input_handler.get_choice(
                 "Введите номер вашего выбора: ")
-            if choice == '1':
-                self.settings_manager.toggle_surfaces()
-            elif choice == '2':
-                self.settings_manager.change_num_coins()
-            elif choice == '3':
-                self.settings_manager.change_num_traps()
-            elif choice == '4':
-                break
-            elif choice == '5':
-                self.exit_game()
-            else:
-                self.renderer.display_error_message()
+            match choice:
+                case '1':
+                    self.settings_manager.toggle_surfaces()
+                case '2':
+                    self.settings_manager.change_num_coins()
+                case '3':
+                    self.settings_manager.change_num_traps()
+                case '4':
+                    break
+                case '5':
+                    self.exit_game()
+                case _:
+                    self.renderer.display_error_message()
 
     def exit_game(self) -> None:
         """

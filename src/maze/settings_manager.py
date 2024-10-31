@@ -90,18 +90,19 @@ class SettingsManager:
             height: int
             width, height = self.menu.input_handler.get_maze_size()
             choice: str = self.menu.renderer.preview_maze_size(width, height)
-            if choice == '1':
-                self.maze_size = f"{width}x{height}"
-                self.menu.maze_size = self.maze_size
-                break
-            elif choice == '2':
-                continue
-            elif choice == '3':
-                break
-            elif choice == '4':
-                self.menu.exit_game()
-            else:
-                self.menu.renderer.display_error_message()
+            match choice:
+                case '1':
+                    self.maze_size = f"{width}x{height}"
+                    self.menu.maze_size = self.maze_size
+                    break
+                case '2':
+                    continue
+                case '3':
+                    break
+                case '4':
+                    self.menu.exit_game()
+                case _:
+                    self.menu.renderer.display_error_message()
 
     def toggle_surfaces(self) -> None:
         """
