@@ -1,4 +1,4 @@
-import setup_path
+# import setup_path
 import asyncio
 from src.handlers.input_handler import parse_args, format_date, validate_paths
 from src.render.renderer import show_program_info
