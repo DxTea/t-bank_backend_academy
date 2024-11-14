@@ -15,9 +15,7 @@ class TestParser(unittest.IsolatedAsyncioTestCase):
     @patch('src.log_parser.parser.read_log_file', new_callable=AsyncMock)
     async def test_parse_log_file(self, mock_read_log_file):
         mock_read_log_file.return_value = [
-            f'127.0.0.1 - user [01/Jan/2023:00:00:00 +0000] "GET '
-            f'/index.html HTTP/1.1" 200 1234 "http://example.com" '
-            f'"Mozilla/5.0"'
+            '127.0.0.1 - user [01/Jan/2023:00:00:00 +0000] "GET /index.html HTTP/1.1" 200 1234 "http://example.com" "Mozilla/5.0"'
         ]
         file_path = 'test.log'
         result = await parse_log_file(file_path)
