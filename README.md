@@ -3,8 +3,8 @@
 ## Описание проекта
 Проект представляет собой консольную программу для генерации лабиринтов и поиска пути в них. Программа позволяет создавать лабиринты различной сложности и размеров, а также предоставляет несколько методов для поиска пути от начальной точки до конечной. Визуализация лабиринта и найденного пути осуществляется в консоли.
 Также вы можете самостоятельно попытаться пройти сгенерированный лабиринт, используя клавиши управления.
-### [Техническое задание](https://github.com/central-university-dev/2-python-DxTea/blob/master/TS.md)
-### [Требования к работе](https://github.com/central-university-dev/2-python-DxTea/blob/master/TD.md)
+### [Техническое задание](https://github.com/DxTea/t-bank_backend_academy/blob/Task_2_Labyrinths/TS.md)
+### [Требования к работе](https://github.com/DxTea/t-bank_backend_academy/blob/Task_2_Labyrinths/TD.md)
 ## Запуск
 - Установить `python 3.12`
 - Установить зависимости (`pip install -r requirements.txt`)
