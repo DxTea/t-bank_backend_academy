@@ -7,9 +7,9 @@ URL, анализировать их и генерировать отчеты в
 общего количества запросов, среднего размера, уникальных IP-адресов, а также распределение по ресурсам и статусам
 ответов.
 
-### [Техническое задание](https://github.com/central-university-dev/3-python-DxTea/blob/master/TS.md)
+### [Техническое задание](https://github.com/DxTea/t-bank_backend_academy/blob/Task_3_LogAnalyzer/TS.md)
 
-### [Требования к работе](https://github.com/central-university-dev/3-python-DxTea/blob/master/TD.md)
+### [Требования к работе](https://github.com/DxTea/t-bank_backend_academy/blob/Task_3_LogAnalyzer/TD.md) 
 
 ## Запуск
 
