@@ -44,7 +44,7 @@ class TestRenderer(unittest.TestCase):
 
         mock_print.assert_any_call(
             "Log Analyzer: Инструмент для анализа лог-файлов NGINX и генерации отчетов.")
-        mock_print.assert_any_call("Версия игры: 1.0.0")
+        mock_print.assert_any_call("Версия: 1.1.0")
         mock_print.assert_any_call("Разработчик: Семён Давыдов aka DxTea")
         mock_print.assert_any_call(
             "Инструкция: список всех команд с пояснениями доступен по команде --help или -h")
