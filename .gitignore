@@ -113,5 +113,7 @@ venv
 .idea/
 .vscode/
 
-.src/reports/
-.src/logs/
+
+
+/src/reports/
+/src/logs/
