@@ -92,18 +92,16 @@ async def parse_log_file(file_path: str,
     logs: List[LogRecord] = []
     for line in lines:
         log = parse_log_line(line)
-        if log:
-            if from_date and log.date < from_date:
-                continue
-            if to_date and log.date > to_date:
-                continue
-            if agent and agent not in log.agent:
-                continue
-            if status_code and log.status != status_code:
-                continue
-            if request_method and not log.request.lower().startswith(
-                    request_method.lower()):
-                continue
+        conditions = [
+            not from_date or log.date >= from_date,
+            not to_date or log.date <= to_date,
+            not agent or agent in log.agent,
+            not status_code or log.status == status_code,
+            not request_method or log.request.lower().startswith(
+                request_method.lower())
+        ]
+
+        if log and all(conditions):
             logs.append(log)
     return logs
 

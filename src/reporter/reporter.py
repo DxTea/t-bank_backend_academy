@@ -63,12 +63,13 @@ class Reporter:
         :return: Объект форматтера.
         :raises ValueError: Если расширение отчета не поддерживается.
         """
-        if report_extension == 'md':
-            return MarkdownReportFormatter()
-        elif report_extension == 'adoc':
-            return AsciiDocReportFormatter()
-        elif report_extension == 'json':
-            return JsonReportFormatter()
-        else:
-            raise ValueError(
-                f'Unsupported report extension: {report_extension}')
+        match report_extension:
+            case 'md':
+                return MarkdownReportFormatter()
+            case 'adoc':
+                return AsciiDocReportFormatter()
+            case 'json':
+                return JsonReportFormatter()
+            case _:
+                raise ValueError(
+                    f'Unsupported report extension: {report_extension}')
